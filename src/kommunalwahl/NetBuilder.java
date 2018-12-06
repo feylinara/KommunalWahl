@@ -15,30 +15,48 @@ public class NetBuilder implements ContextBuilder<Object> {
 
 	@Override
 	public Context<Object> build(Context<Object> context) {
+		
+		Parameters p = RunEnvironment.getInstance().getParameters();
+		int endAt = p.getInteger("endAt");
+		int nParties = p.getInteger("numberOfParties");
+		int nVoters = p.getInteger("numberOfVoters");
+		int nPartyMembers = (int) (nVoters * p.getFloat("percentageOfMembers"));
+
+		RunEnvironment.getInstance().endAt(endAt);
+
+		// create a social network
 		NetworkBuilder<Object> netBuilder = new NetworkBuilder<Object>(
 				"social_network", context, true);
 		Network<Object> network = netBuilder.buildNetwork();
-
-		Parameters p = RunEnvironment.getInstance().getParameters();
-		int endAt = (Integer) p.getValue("endAt");
-		RunEnvironment.getInstance().endAt(endAt);
-
-		int nParties = (Integer) p.getValue("numberOfParties");
-		int nVoters = (Integer) p.getValue("numberOfVoters");
+		context.addProjection(network);
 
 		Party parties[] = new Party[nParties];
 		for (int i = 0; i < parties.length; i++) {
 			parties[i] = new Party();
 		}
 
-		Normal normalVerteilung = RandomHelper.createNormal(0.5, 0.2);
+		Normal voterOpinionDistribution = RandomHelper.createNormal(0.5, 0.2);
 
-		for (int i = 0; i < nVoters; i++) {
+		for (int i = 0; i < nVoters - nPartyMembers; i++) {
 			HashMap<Party, Double> opinion = new HashMap<>();
 			for (Party party : parties) {
-				opinion.put(party, normalVerteilung.nextDouble());
+				opinion.put(party, voterOpinionDistribution.nextDouble());
 			}
-			context.add(new Voter(opinion, normalVerteilung.nextDouble()));
+			context.add(new Voter(opinion, voterOpinionDistribution.nextDouble()));
+		}
+		
+		Normal memberOpinionDistribution = RandomHelper.createNormal(0.8, 0.1);
+		for (int i = 0; i < nPartyMembers; i++) {
+			Party partyMembership = parties[RandomHelper.nextIntFromTo(0, parties.length - 1)];
+			HashMap<Party, Double> opinion = new HashMap<>();
+			for (Party party : parties) {
+				if (party == partyMembership) {
+					opinion.put(party, memberOpinionDistribution.nextDouble());
+				} else {
+					opinion.put(party, voterOpinionDistribution.nextDouble());
+				}
+			}
+			context.add(new PartyMember(opinion, voterOpinionDistribution.nextDouble(), partyMembership));
 		}
 
 		for (Object obj : context.getObjects(Voter.class)) {

@@ -14,7 +14,7 @@ public class Voter {
 	}
 
 	void increaseInfluence(Party party) {
-		// TODO: change, maybe?
+		// TODO change, maybe?
 		double opinion = this.opinion.get(party);
 		opinion += naivite;
 		this.opinion.put(party, opinion);
