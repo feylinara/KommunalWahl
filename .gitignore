@@ -1,0 +1,12 @@
+bin/
+*.log
+.settings/
+docs/
+misc/
+batch/ReadMe.txt
+freezedried_data/
+model_description.txt
+.#*
+launchers/ReadMe.txt
+integration/
+lib/
