@@ -25,22 +25,24 @@ public class NetBuilder implements ContextBuilder<Object> {
 		RunEnvironment.getInstance().endAt(endAt);
 
 		// create a social network
-		NetworkBuilder<Object> netBuilder = new NetworkBuilder<Object>("social_network", context, true);
+		NetworkBuilder<Object> netBuilder = new NetworkBuilder<Object>("social_network", context,
+				true);
 		Network<Object> network = netBuilder.buildNetwork();
 		context.addProjection(network);
 
 		Party parties[] = new Party[nParties];
 		for (int i = 0; i < parties.length; i++) {
-			parties[i] = new Party();
+			parties[i] = new Party(i);
 		}
 
 		Normal voterOpinionDistribution = RandomHelper.createNormal(0.5, 0.2);
+		Normal naiviteDistribution = RandomHelper.createNormal(0.1, 0.05);
 		for (int i = 0; i < nVoters - nPartyMembers; i++) {
 			HashMap<Party, Double> opinion = new HashMap<>();
 			for (Party party : parties) {
 				opinion.put(party, Util.clamp(voterOpinionDistribution.nextDouble(), 0, 1));
 			}
-			context.add(new Voter(opinion, Util.clamp(voterOpinionDistribution.nextDouble(), 0, 1)));
+			context.add(new Voter(opinion, Util.clamp(naiviteDistribution.nextDouble(), 0, 1)));
 		}
 
 		Normal memberOpinionDistribution = RandomHelper.createNormal(0.8, 0.1);
@@ -54,8 +56,8 @@ public class NetBuilder implements ContextBuilder<Object> {
 					opinion.put(party, Util.clamp(voterOpinionDistribution.nextDouble(), 0, 1));
 				}
 			}
-			context.add(
-					new PartyMember(opinion, Util.clamp(voterOpinionDistribution.nextDouble(), 0, 1), partyMembership));
+			context.add(new PartyMember(opinion, Util.clamp(naiviteDistribution.nextDouble(), 0, 1),
+					partyMembership));
 		}
 
 		for (Object obj : context.getObjects(Voter.class)) {

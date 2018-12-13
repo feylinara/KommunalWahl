@@ -26,7 +26,7 @@ public class PartyMember extends Voter {
 			}
 		}
 	}
-	
+
 	@ScheduledMethod(start = 0.5, interval = 1.0)
 	public void update() {
 		super.update();
