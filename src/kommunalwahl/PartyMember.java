@@ -18,15 +18,15 @@ public class PartyMember extends Voter {
 	@ScheduledMethod(start = 1.0, interval = 1.0)
 	public void step() {
 		super.step();
-		Context<Object> context = (Context<Object>)ContextUtils.getContext(this);
+		Context<Object> context = (Context<Object>) ContextUtils.getContext(this);
 		Network<Object> network = (Network<Object>) context.getProjection("network");
-		for(Object obj : network.getOutEdges(this)) {
+		for (Object obj : network.getOutEdges(this)) {
 			if (obj instanceof Voter) {
-				((Voter)obj).increaseInfluence(party);
+				((Voter) obj).increaseInfluence(party);
 			}
 		}
 	}
-
+	
 	@ScheduledMethod(start = 0.5, interval = 1.0)
 	public void update() {
 		super.update();

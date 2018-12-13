@@ -15,7 +15,7 @@ public class NetBuilder implements ContextBuilder<Object> {
 
 	@Override
 	public Context<Object> build(Context<Object> context) {
-		
+
 		Parameters p = RunEnvironment.getInstance().getParameters();
 		int endAt = p.getInteger("endAt");
 		int nParties = p.getInteger("numberOfParties");
@@ -25,8 +25,7 @@ public class NetBuilder implements ContextBuilder<Object> {
 		RunEnvironment.getInstance().endAt(endAt);
 
 		// create a social network
-		NetworkBuilder<Object> netBuilder = new NetworkBuilder<Object>(
-				"social_network", context, true);
+		NetworkBuilder<Object> netBuilder = new NetworkBuilder<Object>("social_network", context, true);
 		Network<Object> network = netBuilder.buildNetwork();
 		context.addProjection(network);
 
@@ -36,27 +35,27 @@ public class NetBuilder implements ContextBuilder<Object> {
 		}
 
 		Normal voterOpinionDistribution = RandomHelper.createNormal(0.5, 0.2);
-
 		for (int i = 0; i < nVoters - nPartyMembers; i++) {
 			HashMap<Party, Double> opinion = new HashMap<>();
 			for (Party party : parties) {
-				opinion.put(party, voterOpinionDistribution.nextDouble());
+				opinion.put(party, Util.clamp(voterOpinionDistribution.nextDouble(), 0, 1));
 			}
-			context.add(new Voter(opinion, voterOpinionDistribution.nextDouble()));
+			context.add(new Voter(opinion, Util.clamp(voterOpinionDistribution.nextDouble(), 0, 1)));
 		}
-		
+
 		Normal memberOpinionDistribution = RandomHelper.createNormal(0.8, 0.1);
 		for (int i = 0; i < nPartyMembers; i++) {
 			Party partyMembership = parties[RandomHelper.nextIntFromTo(0, parties.length - 1)];
 			HashMap<Party, Double> opinion = new HashMap<>();
 			for (Party party : parties) {
 				if (party == partyMembership) {
-					opinion.put(party, memberOpinionDistribution.nextDouble());
+					opinion.put(party, Util.clamp(memberOpinionDistribution.nextDouble(), 0, 1));
 				} else {
-					opinion.put(party, voterOpinionDistribution.nextDouble());
+					opinion.put(party, Util.clamp(voterOpinionDistribution.nextDouble(), 0, 1));
 				}
 			}
-			context.add(new PartyMember(opinion, voterOpinionDistribution.nextDouble(), partyMembership));
+			context.add(
+					new PartyMember(opinion, Util.clamp(voterOpinionDistribution.nextDouble(), 0, 1), partyMembership));
 		}
 
 		for (Object obj : context.getObjects(Voter.class)) {

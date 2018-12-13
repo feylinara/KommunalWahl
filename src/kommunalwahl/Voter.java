@@ -14,9 +14,11 @@ public class Voter {
 	}
 
 	void increaseInfluence(Party party) {
-		// TODO change, maybe?
+		// We use a sigmoid function for increasing influence
+		double r = naivite;
+		double K = 0.1;
 		double opinion = this.opinion.get(party);
-		opinion += naivite;
+		opinion += r * opinion * (1 - opinion/K);
 		this.opinion.put(party, opinion);
 	}
 	
