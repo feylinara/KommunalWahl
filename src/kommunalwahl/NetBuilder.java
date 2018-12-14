@@ -33,6 +33,7 @@ public class NetBuilder implements ContextBuilder<Object> {
 		Party parties[] = new Party[nParties];
 		for (int i = 0; i < parties.length; i++) {
 			parties[i] = new Party(i);
+			context.add(parties[i]);
 		}
 
 		Normal voterOpinionDistribution = RandomHelper.createNormal(0.5, 0.2);
@@ -62,19 +63,17 @@ public class NetBuilder implements ContextBuilder<Object> {
 		}
 
 		for (Object obj : context.getObjects(Voter.class)) {
-			Voter a = (Voter) obj;
+			Voter self = (Voter) obj;
 
-			double outEdges = RandomHelper.nextIntFromTo(1, 10);
-			for (int i = 0; i < outEdges; i++) {
+			int outEdges = RandomHelper.nextIntFromTo(1, 10);
 
-				Voter friend = (Voter) context.getRandomObject();
-				if (!friend.equals(a)) {
-					network.addEdge(a, friend);
-				} else {
-					i--;
-				}
+			Iterable<Object> friends = context.getRandomObjects(Voter.class, outEdges);
+			for (Object friend: friends) {
+				network.addEdge(self, friend);
 			}
+			
 		}
+				
 		return context;
 	}
 }
