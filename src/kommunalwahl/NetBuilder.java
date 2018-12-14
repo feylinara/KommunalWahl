@@ -18,9 +18,9 @@ public class NetBuilder implements ContextBuilder<Object> {
 
 		Parameters p = RunEnvironment.getInstance().getParameters();
 		int endAt = p.getInteger("endAt");
-		int nParties = p.getInteger("numberOfParties");
-		int nVoters = p.getInteger("numberOfVoters");
-		int nPartyMembers = (int) (nVoters * p.getFloat("percentageOfMembers"));
+		int nParties = p.getInteger("nParties");
+		int nVoters = p.getInteger("nVoters");
+		int nPartyMembers = (int) (nVoters * p.getDouble("percentageOfMembers"));
 
 		RunEnvironment.getInstance().endAt(endAt);
 
@@ -28,7 +28,7 @@ public class NetBuilder implements ContextBuilder<Object> {
 		NetworkBuilder<Object> netBuilder = new NetworkBuilder<Object>("social_network", context,
 				true);
 		Network<Object> network = netBuilder.buildNetwork();
-		context.addProjection(network);
+		// context.addProjection(network);
 
 		Party parties[] = new Party[nParties];
 		for (int i = 0; i < parties.length; i++) {
@@ -36,7 +36,7 @@ public class NetBuilder implements ContextBuilder<Object> {
 		}
 
 		Normal voterOpinionDistribution = RandomHelper.createNormal(0.5, 0.2);
-		Normal naiviteDistribution = RandomHelper.createNormal(0.1, 0.05);
+		Normal naiviteDistribution = RandomHelper.createNormal(0.5, 0.1);
 		for (int i = 0; i < nVoters - nPartyMembers; i++) {
 			HashMap<Party, Double> opinion = new HashMap<>();
 			for (Party party : parties) {
@@ -48,6 +48,7 @@ public class NetBuilder implements ContextBuilder<Object> {
 		Normal memberOpinionDistribution = RandomHelper.createNormal(0.8, 0.1);
 		for (int i = 0; i < nPartyMembers; i++) {
 			Party partyMembership = parties[RandomHelper.nextIntFromTo(0, parties.length - 1)];
+			partyMembership.nMembers++;
 			HashMap<Party, Double> opinion = new HashMap<>();
 			for (Party party : parties) {
 				if (party == partyMembership) {
