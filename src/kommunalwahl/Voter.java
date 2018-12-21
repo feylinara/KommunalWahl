@@ -7,6 +7,7 @@ import repast.simphony.engine.schedule.ScheduledMethod;
 
 public class Voter {
 	private HashMap<Party, Double> opinion;
+	private HashMap<Party, Double> _opinion;
 	private double naivite;
 
 	Voter(HashMap<Party, Double> opinion, double naivite) {
@@ -20,9 +21,10 @@ public class Voter {
 	 * @param party
 	 */
 	void increaseInfluence(Party party, double influence) {
+		_opinion = (HashMap<Party, Double>) opinion.clone();
 		double opinion = this.opinion.get(party);
 		opinion += naivite * influence;
-		this.opinion.put(party, opinion);
+		this._opinion.put(party, opinion);
 	}
 
 	/**
@@ -49,5 +51,6 @@ public class Voter {
 
 	@ScheduledMethod(start = 0.5, interval = 1.0)
 	public void update() {
+		opinion = _opinion;
 	}
 }
