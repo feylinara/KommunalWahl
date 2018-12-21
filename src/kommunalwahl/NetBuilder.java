@@ -17,14 +17,19 @@ public class NetBuilder implements ContextBuilder<Object> {
 	public Context<Object> build(Context<Object> context) {
 
 		Parameters p = RunEnvironment.getInstance().getParameters();
+		// The number of steps to run
 		int endAt = p.getInteger("endAt");
+		// The number of parties and voters
 		int nParties = p.getInteger("nParties");
 		int nVoters = p.getInteger("nVoters");
+		// The number of Party Members
 		int nPartyMembers = (int) (nVoters * p.getDouble("percentageOfMembers"));
-		
+		// The respective influences of member advertisment and party Advertisement
 		double socialInfluence = p.getDouble("socialInfluence");
-		PartyMember.influence = socialInfluence;
 		double partyInfluence = p.getDouble("partyInfluence");
+		// TODO: number of Voters reached
+		
+		PartyMember.influence = socialInfluence;
 		Party.influence = partyInfluence;
 
 		RunEnvironment.getInstance().endAt(endAt);
@@ -33,14 +38,15 @@ public class NetBuilder implements ContextBuilder<Object> {
 		NetworkBuilder<Object> netBuilder = new NetworkBuilder<Object>("social_network", context,
 				true);
 		Network<Object> network = netBuilder.buildNetwork();
-		// context.addProjection(network);
 
+		// Create Parties
 		Party parties[] = new Party[nParties];
 		for (int i = 0; i < parties.length; i++) {
 			parties[i] = new Party(i);
 			context.add(parties[i]);
 		}
 
+		// Create Voters
 		Normal voterOpinionDistribution = RandomHelper.createNormal(0.5, 0.2);
 		Normal naiviteDistribution = RandomHelper.createNormal(0.5, 0.1);
 		for (int i = 0; i < nVoters - nPartyMembers; i++) {
@@ -51,6 +57,7 @@ public class NetBuilder implements ContextBuilder<Object> {
 			context.add(new Voter(opinion, Util.clamp(naiviteDistribution.nextDouble(), 0, 1)));
 		}
 
+		// Create Party Members
 		Normal memberOpinionDistribution = RandomHelper.createNormal(0.8, 0.1);
 		for (int i = 0; i < nPartyMembers; i++) {
 			Party partyMembership = parties[RandomHelper.nextIntFromTo(0, parties.length - 1)];
@@ -67,6 +74,7 @@ public class NetBuilder implements ContextBuilder<Object> {
 					partyMembership));
 		}
 
+		// Add edges
 		for (Object obj : context.getObjects(Voter.class)) {
 			Voter self = (Voter) obj;
 
@@ -76,9 +84,7 @@ public class NetBuilder implements ContextBuilder<Object> {
 			for (Object friend: friends) {
 				network.addEdge(self, friend);
 			}
-			
 		}
-				
 		return context;
 	}
 }

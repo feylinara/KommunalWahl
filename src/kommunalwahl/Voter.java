@@ -15,7 +15,7 @@ public class Voter {
 	}
 
 	/**
-	 * Increases the opinion of a party with the sigmoid function r(1-K/X)X.
+	 * Increases the opinion of a party
 	 * 
 	 * @param party
 	 */
@@ -25,6 +25,11 @@ public class Voter {
 		this.opinion.put(party, opinion);
 	}
 
+	/**
+	 * The id of the Party the Voter has the highest opinion of
+	 * 
+	 * @return
+	 */
 	public int wouldVote() {
 		double max = Double.NEGATIVE_INFINITY;
 		Party maxParty = null;

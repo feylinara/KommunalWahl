@@ -12,6 +12,6 @@
     <string>SettingsRegistryId</string>
     <string>Repast.registry</string>
     <string>LastLoadedScenario</string>
-    <string>C:\Users\lschrewe.CIP93E16-06.000\git\KommunalWahl\Kommunalwahl.rs</string>
+    <string>/home/fey/git/KommunalWahl/Kommunalwahl.rs</string>
   </hashtable>
 </simphony.settings.SettingsRegistry>

@@ -22,6 +22,7 @@ public class PartyMember extends Voter {
 		super.step();
 		Context<Object> context = (Context<Object>) ContextUtils.getContext(this);
 		Network<Object> network = (Network<Object>) context.getProjection("social_network");
+		// Party Members influence all people they have out edges with
 		for (RepastEdge<Object> edge : network.getOutEdges(this)) {
 			Object obj = edge.getTarget();
 			if (obj instanceof Voter) {
