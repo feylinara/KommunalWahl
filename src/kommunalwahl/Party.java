@@ -10,6 +10,7 @@ public class Party {
 	public int nMembers;
 	public final int id;
 	public static double influence;
+	public static int reach;
 	
 	public Party(int id) {
 		this.id = id;
@@ -19,7 +20,7 @@ public class Party {
 	public void step() {
 		Context<Object> context = (Context<Object>) ContextUtils.getContext(this);
 		Network<Object> network = (Network<Object>) context.getProjection("social_network");
-		Iterable<Object> viewers = context.getRandomObjects(Voter.class, 10);
+		Iterable<Object> viewers = context.getRandomObjects(Voter.class, reach);
 		for (Object o: viewers) {
 			((Voter) o).increaseInfluence(this, influence);
 		}

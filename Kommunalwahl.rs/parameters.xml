@@ -10,5 +10,7 @@
 	<parameter defaultValue="0.1" displayName="Percentage of Party Members" name="percentageOfMembers" type="double"></parameter>
 	<parameter name="socialInfluence" defaultValue="0.5" displayName="The Influence of Social Advertisment" type="float"></parameter>
 	<parameter name="partyInfluence" defaultValue="0.5" displayName="The Influence of Party Advertisment" type="float"></parameter>
+	<parameter name="partyReach" defaultValue="10" displayName="The Reach of Party Advertisment" type="int"></parameter>
+	<parameter name="voterReach" defaultValue="10" displayName="The maximum Reach of Voter Advertisment" type="int"></parameter>
 
 </parameters>
