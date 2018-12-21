@@ -13,7 +13,6 @@ import repast.simphony.space.graph.Network;
 
 public class NetBuilder implements ContextBuilder<Object> {
 
-	@Override
 	public Context<Object> build(Context<Object> context) {
 
 		Parameters p = RunEnvironment.getInstance().getParameters();
@@ -27,7 +26,7 @@ public class NetBuilder implements ContextBuilder<Object> {
 		// The respective influences of member advertisment and party Advertisement
 		double socialInfluence = p.getDouble("socialInfluence");
 		double partyInfluence = p.getDouble("partyInfluence");
-		int socialReach = p.getInteger("socialReach");
+		int socialReach = p.getInteger("voterReach");
 		int partyReach = p.getInteger("partyReach");
 		
 		PartyMember.influence = socialInfluence;
@@ -72,6 +71,7 @@ public class NetBuilder implements ContextBuilder<Object> {
 					opinion.put(party, Util.clamp(voterOpinionDistribution.nextDouble(), 0, 1));
 				}
 			}
+
 			context.add(new PartyMember(opinion, Util.clamp(naiviteDistribution.nextDouble(), 0, 1),
 					partyMembership));
 		}
@@ -80,7 +80,7 @@ public class NetBuilder implements ContextBuilder<Object> {
 		for (Object obj : context.getObjects(Voter.class)) {
 			Voter self = (Voter) obj;
 
-			int outEdges = RandomHelper.nextIntFromTo(1, voterReach);
+			int outEdges = RandomHelper.nextIntFromTo(1, socialReach);
 
 			Iterable<Object> friends = context.getRandomObjects(Voter.class, outEdges);
 			for (Object friend: friends) {

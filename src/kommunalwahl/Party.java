@@ -24,7 +24,6 @@ public class Party {
 		for (Object o: viewers) {
 			((Voter) o).increaseInfluence(this, influence);
 		}
-		
 	}
 	
 	@Override
