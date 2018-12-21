@@ -24,7 +24,7 @@ public class Voter {
 		double r = naivite;
 		double K = 1.0;
 		double opinion = this.opinion.get(party);
-		opinion += r * opinion * (1 - opinion / K);
+		opinion += naivite;
 		this.opinion.put(party, opinion);
 	}
 

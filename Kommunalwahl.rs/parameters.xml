@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <parameters>
 
-	<parameter name="randomSeed" displayName="Default Random Seed" type="int" defaultValue="__NULL__" />
+	<parameter name="randomSeed" displayName="Default Random Seed" type="int" defaultValue="__NULL__" /><parameter
+		name="endAt" type="int" displayName="Number of Steps"
+		defaultValue="60">
+</parameter>
+	<parameter name="nParties" defaultValue="5" displayName="Number of Parties" type="int"></parameter>
+	<parameter name="nVoters" defaultValue="100" displayName="Number of Voters" type="int"></parameter>
+	<parameter defaultValue="0.1" displayName="Percentage of Party Members" name="percentageOfMembers" type="double"></parameter>
+	<parameter name="socialInfluence" defaultValue="0.5" displayName="The Influence of Social Advertisment" type="float"></parameter>
+	<parameter name="partyInfluence" defaultValue="0.5" displayName="The Influence of Party Advertisment" type="float"></parameter>
 
 </parameters>

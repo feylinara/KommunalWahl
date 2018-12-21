@@ -18,9 +18,9 @@ public class NetBuilder implements ContextBuilder<Object> {
 
 		Parameters p = RunEnvironment.getInstance().getParameters();
 		int endAt = p.getInteger("endAt");
-		int nParties = p.getInteger("numberOfParties");
-		int nVoters = p.getInteger("numberOfVoters");
-		int nPartyMembers = (int) (nVoters * p.getFloat("percentageOfMembers"));
+		int nParties = p.getInteger("nParties");
+		int nVoters = p.getInteger("nVoters");
+		int nPartyMembers = (int) (nVoters * p.getDouble("percentageOfMembers"));
 		
 		double socialInfluence = p.getDouble("socialInfluence");
 		double partyInfluence = p.getDouble("partyInfluence");
@@ -31,15 +31,16 @@ public class NetBuilder implements ContextBuilder<Object> {
 		NetworkBuilder<Object> netBuilder = new NetworkBuilder<Object>("social_network", context,
 				true);
 		Network<Object> network = netBuilder.buildNetwork();
-		context.addProjection(network);
+		// context.addProjection(network);
 
 		Party parties[] = new Party[nParties];
 		for (int i = 0; i < parties.length; i++) {
 			parties[i] = new Party(i);
+			context.add(parties[i]);
 		}
 
 		Normal voterOpinionDistribution = RandomHelper.createNormal(0.5, 0.2);
-		Normal naiviteDistribution = RandomHelper.createNormal(0.1, 0.05);
+		Normal naiviteDistribution = RandomHelper.createNormal(0.5, 0.1);
 		for (int i = 0; i < nVoters - nPartyMembers; i++) {
 			HashMap<Party, Double> opinion = new HashMap<>();
 			for (Party party : parties) {
@@ -51,6 +52,7 @@ public class NetBuilder implements ContextBuilder<Object> {
 		Normal memberOpinionDistribution = RandomHelper.createNormal(0.8, 0.1);
 		for (int i = 0; i < nPartyMembers; i++) {
 			Party partyMembership = parties[RandomHelper.nextIntFromTo(0, parties.length - 1)];
+			partyMembership.nMembers++;
 			HashMap<Party, Double> opinion = new HashMap<>();
 			for (Party party : parties) {
 				if (party == partyMembership) {
@@ -64,19 +66,17 @@ public class NetBuilder implements ContextBuilder<Object> {
 		}
 
 		for (Object obj : context.getObjects(Voter.class)) {
-			Voter a = (Voter) obj;
+			Voter self = (Voter) obj;
 
-			double outEdges = RandomHelper.nextIntFromTo(1, 10);
-			for (int i = 0; i < outEdges; i++) {
+			int outEdges = RandomHelper.nextIntFromTo(1, 10);
 
-				Voter friend = (Voter) context.getRandomObject();
-				if (!friend.equals(a)) {
-					network.addEdge(a, friend);
-				} else {
-					i--;
-				}
+			Iterable<Object> friends = context.getRandomObjects(Voter.class, outEdges);
+			for (Object friend: friends) {
+				network.addEdge(self, friend);
 			}
+			
 		}
+				
 		return context;
 	}
 }

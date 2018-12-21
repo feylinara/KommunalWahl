@@ -9,18 +9,20 @@ import repast.simphony.util.ContextUtils;
 import repast.simphony.context.Context;
 
 public class PartyMember extends Voter {
-	private Party party;
+	private final Party party;
 
 	PartyMember(HashMap<Party, Double> opinion, double naivite, Party party) {
 		super(opinion, naivite);
+		this.party = party;
 	}
 
 	@ScheduledMethod(start = 1.0, interval = 1.0)
 	public void step() {
 		super.step();
 		Context<Object> context = (Context<Object>) ContextUtils.getContext(this);
-		Network<Object> network = (Network<Object>) context.getProjection("network");
-		for (Object obj : network.getOutEdges(this)) {
+		Network<Object> network = (Network<Object>) context.getProjection("social_network");
+		for (RepastEdge<Object> edge : network.getOutEdges(this)) {
+			Object obj = edge.getTarget();
 			if (obj instanceof Voter) {
 				((Voter) obj).increaseInfluence(party);
 			}
