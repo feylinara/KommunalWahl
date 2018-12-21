@@ -23,7 +23,9 @@ public class NetBuilder implements ContextBuilder<Object> {
 		int nPartyMembers = (int) (nVoters * p.getDouble("percentageOfMembers"));
 		
 		double socialInfluence = p.getDouble("socialInfluence");
+		PartyMember.influence = socialInfluence;
 		double partyInfluence = p.getDouble("partyInfluence");
+		Party.influence = partyInfluence;
 
 		RunEnvironment.getInstance().endAt(endAt);
 

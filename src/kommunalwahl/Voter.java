@@ -19,8 +19,7 @@ public class Voter {
 	 * 
 	 * @param party
 	 */
-	void increaseInfluence(Party party) {
-		// We use a sigmoid function for increasing influence
+	void increaseInfluence(Party party, double influence) {
 		double r = naivite;
 		double K = 1.0;
 		double opinion = this.opinion.get(party);

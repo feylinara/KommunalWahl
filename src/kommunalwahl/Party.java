@@ -9,6 +9,7 @@ import repast.simphony.util.ContextUtils;
 public class Party {
 	public int nMembers;
 	public final int id;
+	public static double influence;
 	
 	public Party(int id) {
 		this.id = id;
@@ -20,7 +21,7 @@ public class Party {
 		Network<Object> network = (Network<Object>) context.getProjection("social_network");
 		Iterable<Object> viewers = context.getRandomObjects(Voter.class, 10);
 		for (Object o: viewers) {
-			((Voter) o).increaseInfluence(this);
+			((Voter) o).increaseInfluence(this, influence);
 		}
 		
 	}

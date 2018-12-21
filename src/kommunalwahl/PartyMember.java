@@ -10,6 +10,7 @@ import repast.simphony.context.Context;
 
 public class PartyMember extends Voter {
 	private final Party party;
+	public static double influence;
 
 	PartyMember(HashMap<Party, Double> opinion, double naivite, Party party) {
 		super(opinion, naivite);
@@ -24,7 +25,7 @@ public class PartyMember extends Voter {
 		for (RepastEdge<Object> edge : network.getOutEdges(this)) {
 			Object obj = edge.getTarget();
 			if (obj instanceof Voter) {
-				((Voter) obj).increaseInfluence(party);
+				((Voter) obj).increaseInfluence(party, influence);
 			}
 		}
 	}
