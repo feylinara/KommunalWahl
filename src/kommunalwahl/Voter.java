@@ -20,10 +20,8 @@ public class Voter {
 	 * @param party
 	 */
 	void increaseInfluence(Party party, double influence) {
-		double r = naivite;
-		double K = 1.0;
 		double opinion = this.opinion.get(party);
-		opinion += naivite;
+		opinion += naivite * influence;
 		this.opinion.put(party, opinion);
 	}
 
