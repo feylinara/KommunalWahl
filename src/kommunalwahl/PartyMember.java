@@ -10,7 +10,6 @@ import repast.simphony.context.Context;
 
 public class PartyMember extends Voter {
 	private final Party party;
-	public static double influence;
 
 	PartyMember(HashMap<Party, Double> opinion, double naivite, Party party) {
 		super(opinion, naivite);
@@ -19,7 +18,6 @@ public class PartyMember extends Voter {
 
 	@ScheduledMethod(start = 1.0, interval = 1.0)
 	public void step() {
-		super.step();
 		Context<Object> context = (Context<Object>) ContextUtils.getContext(this);
 		Network<Object> network = (Network<Object>) context.getProjection("social_network");
 		// Party Members influence all people they have out edges with

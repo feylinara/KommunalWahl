@@ -29,7 +29,7 @@ public class NetBuilder implements ContextBuilder<Object> {
 		int socialReach = p.getInteger("voterReach");
 		int partyReach = p.getInteger("partyReach");
 		
-		PartyMember.influence = socialInfluence;
+		Voter.influence = socialInfluence;
 		Party.influence = partyInfluence;
 		Party.reach = partyReach;
 
@@ -80,7 +80,7 @@ public class NetBuilder implements ContextBuilder<Object> {
 		for (Object obj : context.getObjects(Voter.class)) {
 			Voter self = (Voter) obj;
 
-			int outEdges = RandomHelper.nextIntFromTo(1, socialReach);
+			int outEdges = RandomHelper.nextIntFromTo(1, socialReach * 5);
 
 			Iterable<Object> friends = context.getRandomObjects(Voter.class, outEdges);
 			for (Object friend: friends) {

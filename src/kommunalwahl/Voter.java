@@ -3,12 +3,17 @@ package kommunalwahl;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
+import repast.simphony.context.Context;
 import repast.simphony.engine.schedule.ScheduledMethod;
+import repast.simphony.space.graph.Network;
+import repast.simphony.space.graph.RepastEdge;
+import repast.simphony.util.ContextUtils;
 
 public class Voter {
 	private HashMap<Party, Double> opinion;
 	private HashMap<Party, Double> _opinion;
 	private double naivite;
+	public static double influence;
 
 	Voter(HashMap<Party, Double> opinion, double naivite) {
 		this.opinion = this._opinion = opinion;
@@ -26,7 +31,7 @@ public class Voter {
 		this._opinion.put(party, opinion);
 	}
 
-        Party _wouldVote() {
+	Party _wouldVote() {
 		double max = Double.NEGATIVE_INFINITY;
 		Party maxParty = null;
 		for (Entry<Party, Double> entry : opinion.entrySet()) {
@@ -37,7 +42,7 @@ public class Voter {
 			}
 		}
 		return maxParty;
-        }
+	}
 
 	/**
 	 * The id of the Party the Voter has the highest opinion of
@@ -45,14 +50,16 @@ public class Voter {
 	 * @return
 	 */
 	public int wouldVote() {
-            return _wouldVote().id;
+		return _wouldVote().id;
 	}
 
 	@ScheduledMethod(start = 1.0, interval = 1.0)
 	public void step() {
-		Context<Object> context = (Context<Object>) ContextUtils.getContext(this);
-		Network<Object> network = (Network<Object>) context.getProjection("social_network");
-                Party party = _wouldVote();
+		Context<Object> context = (Context<Object>) ContextUtils
+				.getContext(this);
+		Network<Object> network = (Network<Object>) context
+				.getProjection("social_network");
+		Party party = _wouldVote();
 
 		for (RepastEdge<Object> edge : network.getOutEdges(this)) {
 			Object obj = edge.getTarget();
@@ -64,7 +71,7 @@ public class Voter {
 
 	@ScheduledMethod(start = 0.5, interval = 1.0)
 	public void update() {
-                opinion = _opinion;
-                _opinion = (HashMap<Party, Double>) opinion.clone();
-        }
+		opinion = _opinion;
+		_opinion = (HashMap<Party, Double>) opinion.clone();
+	}
 }
